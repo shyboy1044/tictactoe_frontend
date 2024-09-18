@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { googleLogout } from '@react-oauth/google';
 import axios from 'axios';
 
 // const API_URL = "http://localhost:8086/api/game";
@@ -12,6 +13,13 @@ const Game: React.FC = () => {
     
       const [board, setBoard] = useState(emptyBoard);
       const [currentPlayer, setCurrentPlayer] = useState("X");
+
+      const handleLogout = () => {
+        axios.get("http://localhost:8086/api/auth/logout").then(res => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        })
+      }
     
       const makeMove = async (row:number, col:number) => {
         if (board[row][col] !== "-") return;
@@ -36,6 +44,7 @@ const Game: React.FC = () => {
       return (
         <div className="App">
           <h1>Tic Tac Toe</h1>
+          <button onClick={handleLogout}>logout</button>
           <div className="board">
             {board.map((row, rowIndex) => (
               <div key={rowIndex} className="row">

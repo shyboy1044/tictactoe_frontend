@@ -27,11 +27,15 @@ const Game: React.FC = () => {
         const newBoard = board.map((rowArr, rIdx) =>
           rowArr.map((cell, cIdx) => (rIdx === row && cIdx === col ? "X" : cell))
         );
-        setBoard(newBoard);
+        setBoard(newBoard); 
+        const token = localStorage.getItem('token');
     
         const response = await axios.post(
-          "http://localhost:8086/api/tictactoe/move?isPlayerMove=true",
-          { board: newBoard, currentPlayer: "X" }
+          "http://localhost:8087/api/tictactoe/move?isPlayerMove=true",
+          { board: newBoard, currentPlayer: "X" },
+          {
+          headers: { Authorization: `Bearer ${token}` }
+          }
         );
         const _data = [];
         for(const key of response.data.board){

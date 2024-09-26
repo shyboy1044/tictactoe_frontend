@@ -13,15 +13,17 @@ const App = () => {
     }
   }, [])
 
-  const handleLoginSuccess = async (response) => {
+  const handleLoginSuccess = async (credentialResponse) => {
 
-    console.log("handle")
-    // Send the token to your backend for authentication
-    const token = response.credential;
+    const { credential } = credentialResponse;
 
-    localStorage.setItem("token", token);
+        // You can decode the credential (JWT) to get the payload
+    // const decoded = parseJwt(credential);
+    const accessToken = credential;
+    // const tokenId = decoded.sub;
+    localStorage.setItem("token", accessToken);
 
-    await sendToken(token);
+    await sendToken(accessToken);
 
   };
 

@@ -1,38 +1,95 @@
+/* App Container */
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-color: #f0f0f0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Header */
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Logout Button */
+.logout-button {
+  background-color: #ff5c5c;
   color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.logout-button:hover {
+  background-color: #ff3c3c;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Board Styling */
+.board {
+  display: flex;
+  flex-direction: column; /* Stack cells vertically */
+}
+
+/* Cell Styling */
+.cell {
+  width: 100px;  /* Width of each cell */
+  height: 100px; /* Height of each cell */
+  font-size: 2rem; 
+  background-color: #ff5c5c;
+  border: 2px solid #333;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px 0; /* Add margin to create space between cells */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cell:hover {
+  background-color: #21a1f1;
+  transform: scale(1.1);
+}
+
+.cell:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #ccc;
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .board {
+    width: 250px; /* Adjust board width for smaller screens */
   }
-  to {
-    transform: rotate(360deg);
+
+  .cell {
+    width: 80px; /* Adjust cell width */
+    height: 80px; /* Adjust cell height */
+    font-size: 1.5rem; /* Adjust font size */
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem; /* Adjust header font size */
+  }
+
+  .board {
+    width: 200px; /* Further adjust board width for mobile */
+  }
+
+  .cell {
+    width: 60px; /* Adjust cell width */
+    height: 60px; /* Adjust cell height */
+    font-size: 1.2rem; /* Adjust font size */
   }
 }

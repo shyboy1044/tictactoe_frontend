@@ -20,16 +20,3 @@ code {
   justify-content: center;
 }
 
-.cell {
-  width: 100px;
-  height: 100px;
-  font-size: 2rem;
-  text-align: center;
-  background-color: lightgray;
-  border: 2px solid black;
-  cursor: pointer;
-}
-
-.cell:hover {
-  background-color: lightblue;
-}

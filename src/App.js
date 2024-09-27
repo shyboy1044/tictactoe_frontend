@@ -4,10 +4,9 @@ import Game from './Components/Game';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 const App = () => {
-  const [user, setUser] = useState(null);
 
+  const [userId, setUserId] = useState("");
   useEffect(async () => {
-    console.log("use")
     if(localStorage.getItem("token")){
       await sendToken(localStorage.getItem("token"));
     }
@@ -45,15 +44,15 @@ const App = () => {
     const data = await result.json();
 
     // Extract the email from the response
-    const email = data.email;  // Assuming your backend returns { email: "user@example.com" }
-    console.log(email)
-    setUser(email);
+    const {userId} = data;
+    setUserId(userId);
+    localStorage.setItem("userId", userId);
   }
 
   return (
     <div className="App">
       {
-        user ? (<>
+        userId ? (<>
           <Game />
         </>) : (
           <GoogleLogin

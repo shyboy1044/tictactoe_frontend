@@ -7,24 +7,44 @@ const App = () => {
 
   const [userId, setUserId] = useState("");
   useEffect(async () => {
-    if(localStorage.getItem("token")){
-      await sendToken(localStorage.getItem("token"));
+    let data = localStorage.getItem("userId")
+    console.log(data)
+    if (data) {
+      await verify(data);
     }
-  }, [])
+  }, []);
 
-  const handleLoginSuccess = async (credentialResponse) => {
 
-    const { credential } = credentialResponse;
+  const verify = async (token) => {
+    const result = await fetch("http://localhost:8086/api/auth/verifyToken", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",  // Make sure this header is included
+      },
+      body: JSON.stringify({ userId: `${token}` }),  // Ensure the body is stringified
+    });
 
-        // You can decode the credential (JWT) to get the payload
-    // const decoded = parseJwt(credential);
-    const accessToken = credential;
-    // const tokenId = decoded.sub;
-    localStorage.setItem("token", accessToken);
+    if (!result.ok) {
+      // throw new Error("Failed to authenticate");
+      //logout
+    }
+    const data = await result.json();
+    const { userId} = data;
+    setUserId(userId);
+    localStorage.setItem("userId", userId);
+  }
 
-    await sendToken(accessToken);
+  const login = useGoogleLogin({
+    onSuccess: async codeResponse => {
+      localStorage.setItem("googleInfo", codeResponse.code);
+      await sendToken(codeResponse.code);
+    },
+    onError: error => {
+      console.log("error");
+    },
+    flow: 'auth-code',
+  });
 
-  };
 
   const sendToken = async (token) => {
     const result = await fetch("http://localhost:8086/api/auth/google", {
@@ -32,7 +52,7 @@ const App = () => {
       headers: {
         "Content-Type": "application/json",  // Make sure this header is included
       },
-      body: JSON.stringify({ token: token }),  // Ensure the body is stringified
+      body: JSON.stringify({ code: token }),  // Ensure the body is stringified
     });
 
     if (!result.ok) {
@@ -44,9 +64,12 @@ const App = () => {
     const data = await result.json();
 
     // Extract the email from the response
-    const {userId} = data;
+    const { userId, access_token, refresh_token } = data;
     setUserId(userId);
     localStorage.setItem("userId", userId);
+    localStorage.setItem("token", refresh_token);
+    localStorage.setItem("access_token", access_token);
+
   }
 
   return (
@@ -55,10 +78,7 @@ const App = () => {
         userId ? (<>
           <Game />
         </>) : (
-          <GoogleLogin
-            onSuccess={handleLoginSuccess}
-            onError={(error) => console.error('Login Failed:', error)}
-          />
+          <button onClick={() => login()}>Sign in with Google 🚀</button>
         )
       }
     </div>

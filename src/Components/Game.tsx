@@ -14,10 +14,7 @@ const Game: React.FC = () => {
   const [gamestate, setGameState] = useState(false);
 
   const handleLogout = () => {
-    axios.get("http://localhost:8086/api/auth/logout").then(res => {
-      localStorage.removeItem("token");
-      window.location.reload();
-    })
+    window.location.reload();
   }
 
   const makeMove = async (row: number, col: number) => {
@@ -35,7 +32,7 @@ const Game: React.FC = () => {
       "http://localhost:8087/api/tictactoe/move?isPlayerMove=true",
       { board: newBoard, currentPlayer: "X" },
       {
-        headers: { Authorization: `Bearer ${token}`, userId: userId }
+        headers: { Authorization: `${token}`, userId: userId }
       }
     );
     
@@ -46,11 +43,9 @@ const Game: React.FC = () => {
     setBoard(_data);
     setCurrentPlayer(response.data.currentPlayer);
 
-    if (response.data.winner === 'N') {
-      alert("No Winner in this game!");
+    if (response.data.winner === 'N') {     
       setGameState(true);
     } else if (response.data.winner !== '-') {
-      alert("Winner is " + response.data.winner);
       setGameState(true);
     }
   };
@@ -58,7 +53,11 @@ const Game: React.FC = () => {
   return (
     <div className="App">
       <h1>Tic Tac Toe</h1>
-      <button className="logout-button" onClick={handleLogout}>Logout</button>
+      {
+        gamestate === true ? (
+          <button className="logout-button" onClick={handleLogout}>New Game</button>
+        ) : (<></>)
+      }
       <div className="board">
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="row">
